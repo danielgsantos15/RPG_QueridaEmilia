@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personagem</title>
+    <style>
+        .bar {
+            border-radius: 2px;
+            border: 1px solid black;
+        }
+
+        #box {
+            text-align: center;
+            text-align: center;
+            width: 200px;
+            padding: 2px;
+        }
+
+        #nameLabel {
+            border: none;
+        }
+
+
+        #lifeLabel {
+            background-color: red;
+            color: white;
+        }
+
+        #SanityLabel {
+            background-color: blue;
+            text-align: center;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id=box>
+        <div id=photo></div>
+        <div class="bar" id="nameLabel"> {name} </div>
+        <div class="bar" id="lifeLabel"> {currentLife}/{fullLife} </div>
+        <div class="bar" id="SanityLabel"> {currentSani}/{fullSani} </div>
+    </div>
+</body>
+
+</html>
