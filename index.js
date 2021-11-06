@@ -30,8 +30,8 @@ app.get("/js", function (req, res) {
 })
 
 io.on('connection', (socket) => {
-    socket.on('chat message', (msg) => {
-        console.log(JSON.stringify(msg));
+    socket.on('personagem', (personagem) => {
+        io.emit('definir personagem', personagem)
     });
 
     socket.on('altera vida', (vida) => {
@@ -41,8 +41,16 @@ io.on('connection', (socket) => {
     socket.on('altera sanidade', (sanidade) => {
         io.emit('sanidade', sanidade)
     })
+    
+    socket.on('vida total', (vidaTotal) => {
+        io.emit('total', vidaTotal)
+        console.log(vidaTotal)
+    })
+
     console.log('a user connected');
 });
+
+
 
 server.listen(8081, function() {
   console.log("servidor rodando na url http://localhost:8081");

@@ -37,7 +37,7 @@
                     </section>`
             }
 
-            socketByUser(nome.value, vida.value, sani.value);
+            socket.emit('personagem', { nome: nome.value, vida: vida.value, sani: sani.value });
         }
 
         function vidaAtual() {
@@ -75,7 +75,7 @@
 
         function socketByUser(name, vida, sanidade) {
             let user = document.getElementById('player' + name);
-            socket.emit('chat message', {name: name, vida: vida, sanidade:sanidade });
+            
         }
 
         //<p>Imagem: <input type="file" accept="image/*" id="image"></p>

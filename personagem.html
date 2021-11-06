@@ -12,11 +12,28 @@
 
         socket.on('vida', (vida) => {
             console.log(vida)
+            let currentLife = document.querySelector("span#currentLife")
+            currentLife.innerHTML = vida
         })
 
         socket.on('sanidade', (sanidade) => {
             console.log(sanidade)
+            let currentSanity = document.querySelector("span#currentSanity")
+            currentSanity.innerHTML = sanidade
         })
+
+        socket.on('definir personagem', (personagem) => {
+            console.log(personagem)
+            let nome = document.querySelector("span#nome")
+            let fullLife = document.querySelector("span#fullLife")
+            let fullSanity = document.querySelector("span#fullSanity")
+            nome.innerHTML = personagem.nome
+            fullLife.innerHTML = personagem.vida
+            currentLife.innerHTML = personagem.vida
+            fullSanity.innerHTML = personagem.sani
+            currentSanity.innerHTML = personagem.sani
+        })
+        
     </script>
     <style>
         .bar {
@@ -52,9 +69,9 @@
 <body>
     <div id=box>
         <div id=photo></div>
-        <div class="bar" id="nameLabel"> {name} </div>
-        <div class="bar" id="lifeLabel"> {currentLife}/{fullLife} </div>
-        <div class="bar" id="SanityLabel"> {currentSani}/{fullSani} </div>
+        <div class="bar" id="nameLabel"><span id="nome"></span></div>
+        <div class="bar" id="lifeLabel"><span id="currentLife"></span>/<span id="fullLife"></span></div>
+        <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>
     </div>
 </body>
 
