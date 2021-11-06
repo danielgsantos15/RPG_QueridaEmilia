@@ -41,11 +41,6 @@ io.on('connection', (socket) => {
     socket.on('altera sanidade', (sanidade) => {
         io.emit('sanidade', sanidade)
     })
-    
-    socket.on('vida total', (vidaTotal) => {
-        io.emit('total', vidaTotal)
-        console.log(vidaTotal)
-    })
 
     console.log('a user connected');
 });
