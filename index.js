@@ -19,8 +19,12 @@ app.get("/css", function (req, res) {
         res.end(data)
     })
 })
+let userId = '';
 
 app.get('/:name', (req, res) => {
+    userId = req.params.name;
+
+    
     res.sendFile(__dirname + "/personagem.html");
 })
 
@@ -30,6 +34,11 @@ app.get("/js", function (req, res) {
 })
 
 io.on('connection', (socket) => {
+    
+    socket.broadcast.to(userId).emit('oi', 'hiiiis')
+
+
+
     socket.on('personagem', (personagem) => {
         io.emit('definir personagem', personagem)
     });
@@ -40,11 +49,6 @@ io.on('connection', (socket) => {
     
     socket.on('altera sanidade', (sanidade) => {
         io.emit('sanidade', sanidade)
-    })
-    
-    socket.on('vida total', (vidaTotal) => {
-        io.emit('total', vidaTotal)
-        console.log(vidaTotal)
     })
 
     console.log('a user connected');
