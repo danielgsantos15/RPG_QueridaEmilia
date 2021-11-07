@@ -10,22 +10,8 @@ app.get("/", function(req, res) {
     res.sendFile(__dirname + "/index.html")
 })
 
-app.get("/css", function (req, res) {
-    fs.readFile(__dirname + "/estilo.css", (err, data) => {
-        if (err) console.log(err);
-        res.setHeader('content-type', 'text/css');
-        res.writeHead(200)
-        res.end(data)
-    })
-})
-
 app.get('/:name', (req, res) => {
     res.sendFile(__dirname + "/personagem.html");
-})
-
-
-app.get("/js", function (req, res) {
-    res.sendFile(__dirname + "/script.js")
 })
 
 io.on('connection', (socket) => {
