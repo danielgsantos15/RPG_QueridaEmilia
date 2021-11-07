@@ -9,6 +9,12 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
+
+
+        socket.emit('teste', 'testado')
+
+
+
         function criarPersonagem(){
             let name = document.getElementById('nickname');
             let life = document.getElementById('life');
@@ -47,30 +53,26 @@
                 </div>
             </section>`
 
-            socket.emit('personagem privado', socket.id, { nome: name.value, vida: life.value, sani: stability.value });
+
+            socket.emit('join', name.value);
+
+
+            socket.emit('personagem privado', name.value, { nome: name.value, vida: life.value, sani: stability.value });
         }
 
-        function vidaAtual() {
-            saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input name="dano" id="danoV">
-            <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button>`
+        // function vidaAtual() {
+        //     saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input name="dano" id="danoV">
+        //     <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button>`
             
-            socket.emit('altera vida', vAtual.value)
-        }
+        //     socket.emit('altera vida', name.value, vAtual.value)
+        // }
                 
-        function saniAtual() {
-            sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input name="dano" id="danoS">
-            <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
+        // function saniAtual() {
+        //     sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input name="dano" id="danoS">
+        //     <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
         
-            socket.emit('altera sanidade', sAtual.value)
-        }
-
-        function socketByUser(name, vida, sanidade) {
-            let user = document.getElementById('player' + name);
-            
-        }
-
-        //<p>Imagem: <input type="file" accept="image/*" id="image"></p>
-        //<img id="foto" src="" alt="">
+        //     socket.emit('altera sanidade', name.value, sAtual.value)
+        // }
     </script>
 </head>
 <body class="container blue lighten-1">
