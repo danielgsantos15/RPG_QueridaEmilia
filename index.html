@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link type="text/css" rel="stylesheet" href="http://localhost:8081/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <title>Querida Emilia</title>
     <script src="/socket.io/socket.io.js"></script>
     <script>
@@ -15,24 +15,39 @@
             let stability = document.getElementById('stability');
 
             if (!name.value || !life.value || !stability.value) {
-                alert('missing fields');
+                alert('missing fields:name or life or stability');
                 return;
             }
 
             personagem.innerHTML = personagem.innerHTML + `
-            <section>
-                <div id="player${name.value}">
-                    <p id="nick">Player: ${name.value}</p>
-                    <p id="saude">Vida: ${life.value}/${life.value} <input name="dano" id="danoV">
-                    <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button></p>
-                    <p id="sanidade">Sanidade: ${stability.value}/${stability.value} <input name="dano" id="danoS">
-                    <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button></p>
-                    <p id="link"></p>
-                    <a>http://localhost:8081/${name.value}</a>
+                <section class="card-panel section col s12">
+                <div class="row" id="player${name.value}">
+                    <div class="col s4">
+                        <label id="nick">Player:</label>
+                        <span>${name.value}</span>
+                    </div>
+                    <div class="col s4">
+                        <label id="saude">Vida:</label>
+                        <span>${life.value}/${life.value}</span>
+                        <input name="dano" id="danoV"/>
+                        <button id="danovida" class="btn-small" type="button" onclick="vidaAtual()" >Saúde atual</button>
+                    </div>
+                    <div class="col s4">
+                        <label id="sanidade">Sanidade:</label>
+                        <span>${stability.value}/${stability.value}</span>
+                        <input name="dano" id="danoS">
+                        <button id="danosani" class="btn-small" type="button" onclick="saniAtual()" >Sanidade atual</button>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col s12">
+                        <p id="link"></p>
+                        <a href="http://localhost:8081/${name.value}" target="_blank"> http://localhost:8081/${name.value}</a>
+                    </div>
                 </div>
             </section>`
 
-            socket.emit('personagem privado', socket.id, { nome: nome.value, vida: vida.value, sani: sani.value });
+            socket.emit('personagem privado', socket.id, { nome: name.value, vida: life.value, sani: stability.value });
         }
 
         function vidaAtual() {
@@ -49,20 +64,6 @@
             socket.emit('altera sanidade', sAtual.value)
         }
 
-
-        function newplayer() {
-            sessao.innerHTML = `
-                <section>
-                <div>
-                <p>Nome: <input type="text" name="personagem" id="nickname" required></p>
-                <p>Vida: <input name="vida" id="life" required></p>
-                <p>Sanidade: <input name="sanidade" id="stability" required></p>
-                <p><button class="botao" id="teste" onclick="criarPersonagem()" >Criar personagem</button>
-                </div>
-                </section>
-                `
-        }
-
         function socketByUser(name, vida, sanidade) {
             let user = document.getElementById('player' + name);
             
@@ -72,17 +73,29 @@
         //<img id="foto" src="" alt="">
     </script>
 </head>
-<body>
+<body class="container blue lighten-1">
     <header>
         <h1>Criando personagem</h1>
     </header>
-    <div class="criar">
-        <button id="new" onclick="newplayer()">Novo jogador</button>
+    <div class="row" id="sessao">
+        <section class="card-panel section col s12 white">
+            <div class="row">
+                <div class="input-field col s4">
+                    <input type="text" placeholder="nome" name="personagem" id="nickname" required>
+                </div>
+                <div class="input-field col s4">
+                    <input name="vida" placeholder="vida"  id="life" required>
+                </div>
+                <div class="input-field col s4">
+                    <input name="sanidade" placeholder="sanidade"  id="stability" required>
+                </div>
+                <div class="col s4 right">
+                    <button class="btn-small waves-effect waves-light right" onclick="criarPersonagem()">Criar personagem</button>
+                </div>
+            </div>
+        </section>
     </div>
-    <div id="sessao">
-    </div>
-    <div id="personagem">
-
+    <div class="row" id="personagem">
     </div>
     <footer>
         <p>&copy; Daniel Santos</p>
