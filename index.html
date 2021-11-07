@@ -5,54 +5,45 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link type="text/css" rel="stylesheet" href="http://localhost:8081/css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
     <title>Querida Emilia</title>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-    </script>
-    <script>
         function criarPersonagem(){
-            let nome = document.querySelector('input#nickname')
-            let vidaMax = document.querySelector('input#life')
-            let saniMax = document.querySelector('input#sani')
-            let vida = vidaMax
-            let sani = saniMax
-            //let img = document.querySelector('input#image')
+            let name = document.getElementById('nickname');
+            let life = document.getElementById('life');
+            let stability = document.getElementById('stability');
 
-            if (nome.value == "") {
-                alert("Nome inválido")
-            }else{
-                personagem.innerHTML = personagem.innerHTML + `
-                    <section>
-                    <div id="player${nome.value}">
-                    <p id="nick">Player: ${nome.value}</p>
-                    <p id="saude">Vida: ${vida.value}/${vidaMax.value} <input type="number" name="dano" id="danoV">
-                    <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button></p>
-                    <p id="sanidade">Sanidade: ${sani.value}/${saniMax.value} <input type="number" name="dano" id="danoS">
-                    <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button></p>
-                    <p id="link"></p>
-                    <a>http://localhost:8081/${nome.value}</a>
-                    </div>
-                    </section>`
+            if (!name.value || !life.value || !stability.value) {
+                alert('missing fields');
+                return;
             }
 
-            socket.emit('personagem', { nome: nome.value, vida: vida.value, sani: sani.value });
+            personagem.innerHTML = personagem.innerHTML + `
+            <section>
+                <div id="player${name.value}">
+                    <p id="nick">Player: ${name.value}</p>
+                    <p id="saude">Vida: ${life.value}/${life.value} <input name="dano" id="danoV">
+                    <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button></p>
+                    <p id="sanidade">Sanidade: ${stability.value}/${stability.value} <input name="dano" id="danoS">
+                    <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button></p>
+                    <p id="link"></p>
+                    <a>http://localhost:8081/${name.value}</a>
+                </div>
+            </section>`
+
+            socket.emit('personagem privado', socket.id, { nome: nome.value, vida: vida.value, sani: sani.value });
         }
 
         function vidaAtual() {
-            let vida = document.querySelector('input#life')
-            let vAtual = document.querySelector('input#danoV')
-            saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input type="number" name="dano" id="danoV">
+            saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input name="dano" id="danoV">
             <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button>`
             
             socket.emit('altera vida', vAtual.value)
         }
                 
         function saniAtual() {
-            let sani = document.querySelector('input#sani')
-            let sAtual = document.querySelector('input#danoS')
-            sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input type="number" name="dano" id="danoS">
+            sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input name="dano" id="danoS">
             <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
         
             socket.emit('altera sanidade', sAtual.value)
@@ -63,10 +54,9 @@
             sessao.innerHTML = `
                 <section>
                 <div>
-                <strong><p>Insira os dados do personagem:</p></strong>
-                <p>Nome: <input type="text" name="personagem" id="nickname"></p>
-                <p>Vida: <input type="number" name="vida" id="life"></p>
-                <p>Sanidade: <input type="number" name="sanidade" id="sani"></p>
+                <p>Nome: <input type="text" name="personagem" id="nickname" required></p>
+                <p>Vida: <input name="vida" id="life" required></p>
+                <p>Sanidade: <input name="sanidade" id="stability" required></p>
                 <p><button class="botao" id="teste" onclick="criarPersonagem()" >Criar personagem</button>
                 </div>
                 </section>
