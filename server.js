@@ -6,7 +6,6 @@ const { Server } = require("socket.io");
 const io = new Server(server);
 const fs = require("fs");
 
-
 app.get("/", function(req, res) {
     res.sendFile(__dirname + "/index.html")
 })
@@ -19,12 +18,8 @@ app.get("/css", function (req, res) {
         res.end(data)
     })
 })
-let userId = '';
 
 app.get('/:name', (req, res) => {
-    userId = req.params.name;
-
-    
     res.sendFile(__dirname + "/personagem.html");
 })
 
@@ -34,12 +29,7 @@ app.get("/js", function (req, res) {
 })
 
 io.on('connection', (socket) => {
-    
-    socket.broadcast.to(userId).emit('oi', 'hiiiis')
-
-
-
-    socket.on('personagem', (personagem) => {
+    socket.on('cria spersonagem', (personagem) => {
         io.emit('definir personagem', personagem)
     });
 
