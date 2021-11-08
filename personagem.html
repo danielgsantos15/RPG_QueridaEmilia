@@ -5,39 +5,48 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Personagem</title>
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
         let room = window.location.pathname.replace(/\\|\//g, '');
 
-        socket.emit('join', room);
+        // let nome = document.querySelector("span#nome")
+        // let fullLife = document.querySelector("span#fullLife")
+        // let fullSanity = document.querySelector("span#fullSanity")
+        // nome.innerHTML = personagem.nome
+        // fullLife.innerHTML = personagem.vida
+        // currentLife.innerHTML = personagem.vida
+        // fullSanity.innerHTML = personagem.sani
+        // currentSanity.innerHTML = personagem.sani
 
+        function getter() {
+            axios({
+                method: 'get',
+                URL: 'http://localhost:8081/get/' + room,
+            })
+            .then(function (response){
+                console.log(response)
+            })
+            .catch(function(error){
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+            })
+        }
 
-        // socket.on('vida', (vida) => {
-        //     console.log(vida)
-        //     let currentLife = document.querySelector("span#currentLife")
-        //     currentLife.innerHTML = vida
-        // })
-
-        // socket.on('sanidade', (sanidade) => {
-        //     console.log(sanidade)
-        //     let currentSanity = document.querySelector("span#currentSanity")
-        //     currentSanity.innerHTML = sanidade
-        // })
-
-        socket.on('personagem privado', (personagem) => {
-            console.log(personagem)
-            // let nome = document.querySelector("span#nome")
-            // let fullLife = document.querySelector("span#fullLife")
-            // let fullSanity = document.querySelector("span#fullSanity")
-            // nome.innerHTML = personagem.nome
-            // fullLife.innerHTML = personagem.vida
-            // currentLife.innerHTML = personagem.vida
-            // fullSanity.innerHTML = personagem.sani
-            // currentSanity.innerHTML = personagem.sani
-        })
-        
+        getter()
     </script>
     <style>
         .bar {

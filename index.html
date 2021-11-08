@@ -5,13 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Querida Emilia</title>
-    <script src="/socket.io/socket.io.js"></script>
     <script>
-        var socket = io();
-
-
-        socket.emit('teste', 'testado')
 
 
 
@@ -53,25 +49,54 @@
                 </div>
             </section>`
 
+            return sender(name.value, life.value, stability.value)
+        }
 
-            socket.emit('join', name.value);
-
-
-            socket.emit('personagem privado', name.value, { nome: name.value, vida: life.value, sani: stability.value });
+        function sender(name, life, stability) {
+            axios({
+                method: 'post',
+                url: 'http://localhost:8081/new',
+                data:{
+                    name: name,
+                    life: life,
+                    stability: stability,
+                }
+            })
+            .then(function (resposnse) {
+                console.log(resposnse)
+            })
+            .catch(function(error) {
+                console.log(error)
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+                    // http.ClientRequest in node.js
+                    console.log(error.request);
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.log('Error', error.message);
+                }
+            })
         }
 
         // function vidaAtual() {
         //     saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input name="dano" id="danoV">
         //     <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button>`
             
-        //     socket.emit('altera vida', name.value, vAtual.value)
+      
         // }
                 
         // function saniAtual() {
         //     sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input name="dano" id="danoS">
         //     <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
         
-        //     socket.emit('altera sanidade', name.value, sAtual.value)
+        //   
         // }
     </script>
 </head>
