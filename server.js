@@ -14,16 +14,20 @@ app.get('/:name', (req, res) => {
     res.sendFile(__dirname + "/personagem.html");
 })
 
-let personagens = {}
+let personagens = []
 
 app.post('/new', (req, res) => {
-    personagens[req.body.name] = req.body
+    personagens.push(req.body)
     res.send('inserted')
 })
 
 
 app.get('/get/:name', (req, res) => {
-    res.send('fdgfdgfdgfd')
+    for (let personagem of personagens){
+        if (req.params.name == personagem.name){
+            res.send(personagem)
+        }
+    }
 })
 
 
