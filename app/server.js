@@ -7,11 +7,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname + "/index.html")
+    res.sendFile(__dirname + "/public/index.html")
 })
 
 app.get('/:name', (req, res) => {    
-    res.sendFile(__dirname + "/personagem.html");
+    res.sendFile(__dirname + "/public/personagem.html");
 })
 
 let personagens = []
@@ -31,6 +31,6 @@ app.get('/get/:name', (req, res) => {
 })
 
 
-server.listen(8081, function() {
-  console.log("servidor rodando na url http://localhost:8081");
+server.listen(process.env.PORT, function() {
+    console.log("servidor rodando na url http://localhost:" + process.env.PORT);
 });
