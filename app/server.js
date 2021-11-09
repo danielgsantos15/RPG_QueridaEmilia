@@ -2,7 +2,13 @@ const express = require("express");
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const connection = require('./connection')
+let personagens = '';
+async function init() {
+    personagens = await connection.getcharacters();
+}
 
+init();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -14,15 +20,16 @@ app.get('/:name', (req, res) => {
     res.sendFile(__dirname + "/public/personagem.html");
 })
 
-let personagens = []
-
 app.post('/new', (req, res) => {
-    personagens.push(req.body)
     res.send('inserted')
 })
 
+app.post('/update/:type', (req, res) => {
+    //rota para atualizar vida e sanidade
+})
 
-app.get('/get/:name', (req, res) => {
+
+app.get('/get/:name', async (req, res) => {
     for (let personagem of personagens){
         if (req.params.name == personagem.name){
             res.send(personagem)

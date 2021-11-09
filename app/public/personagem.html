@@ -17,7 +17,6 @@
                 url: 'http://localhost:8081/get/' + room,
             })
             .then(function (response){
-                console.log(response.data)
                 let personagem = response.data
                 let nome = document.querySelector("span#nome")
                 let fullLife = document.querySelector("span#fullLife")
