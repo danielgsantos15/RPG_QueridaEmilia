@@ -9,58 +9,72 @@
     <title>Querida Emilia</title>
     <script>
 
-
-
         function criarPersonagem(){
-            let name = document.getElementById('nickname');
-            let life = document.getElementById('life');
-            let stability = document.getElementById('stability');
+            let name = document.getElementById('nickname').value;
+            let life = document.getElementById('life').value;
+            let stability = document.getElementById('stability').value;
 
-            if (!name.value || !life.value || !stability.value) {
+            if (!name || !life || !stability) {
                 alert('missing fields:name or life or stability');
                 return;
             }
 
             personagem.innerHTML = personagem.innerHTML + `
                 <section class="card-panel section col s12">
-                <div class="row" id="player${name.value}">
+                <div class="row" id="player${name}">
                     <div class="col s4">
                         <label id="nick">Player:</label>
-                        <span>${name.value}</span>
+                        <span id="nickSpan">${name}</span>
                     </div>
                     <div class="col s4">
                         <label id="saude">Vida:</label>
-                        <span>${life.value}/${life.value}</span>
-                        <input name="dano" id="danoV"/>
-                        <button id="danovida" class="btn-small" type="button" onclick="vidaAtual()" >Saúde atual</button>
+                        <span>${life}/${life}</span>
+                        <input name="dano" id="currentLife"/>
+                        <button id="currentLife" class="btn-small" type="button" onclick="vidaAtual()" >Saúde atual</button>
                     </div>
                     <div class="col s4">
                         <label id="sanidade">Sanidade:</label>
-                        <span>${stability.value}/${stability.value}</span>
-                        <input name="dano" id="danoS">
-                        <button id="danosani" class="btn-small" type="button" onclick="saniAtual()" >Sanidade atual</button>
+                        <span>${stability}/${stability}</span>
+                        <input name="dano" id="currentStability">
+                        <button id="currentStabilityani" class="btn-small" type="button" onclick="saniAtual()" >Sanidade atual</button>
                     </div>
                 </div>
                 <div class=row>
                     <div class="col s12">
                         <p id="link"></p>
-                        <a href="http://localhost:8081/${name.value}" target="_blank"> http://localhost:8081/${name.value}</a>
+                        <a href="http://localhost:8081/${name}" target="_blank"> http://localhost:8081/${name}</a>
                     </div>
                 </div>
             </section>`
 
-            return sender(name.value, life.value, stability.value)
+            sender({
+                name: name,
+                currentLife: life,
+                totalLife: life,
+                currentStability: stability,
+                totalStability: stability
+            })
+
+            clear();
         }
 
-        function sender(name, life, stability) {
+        function clear () {
+            document.getElementById('nickname').value = '';
+            document.getElementById('life').value = '';
+            document.getElementById('stability').value = '';
+        }
+
+        function sender(personagem) {
+
+            if(!personagem.hasOwnProperty('name') || !personagem.name) {
+                alert('falta nome no sender')
+                return;
+            }
+
             axios({
                 method: 'post',
                 url: 'http://localhost:8081/new',
-                data:{
-                    name: name,
-                    life: life,
-                    stability: stability,
-                }
+                data: personagem
             })
             .then(function (resposnse) {
                 console.log(resposnse)
@@ -68,36 +82,49 @@
             .catch(function(error) {
                 console.log(error)
                 if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
                     console.log(error.response.data);
                     console.log(error.response.status);
                     console.log(error.response.headers);
                 } else if (error.request) {
-                    // The request was made but no response was received
-                    // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-                    // http.ClientRequest in node.js
                     console.log(error.request);
                 } else {
-                    // Something happened in setting up the request that triggered an Error
                     console.log('Error', error.message);
                 }
             })
         }
 
-        // function vidaAtual() {
-        //     saude.innerHTML = `Vida: ${vAtual.value}/${vida.value} <input name="dano" id="danoV">
-        //     <button id="danovida" type="button" onclick="vidaAtual()" >Saúde atual</button>`
+        function vidaAtual() {
+            let name = document.getElementById('nickSpan').value;
+            let totalLife = document.getElementById('life').value;
+            let currentLife = document.getElementById('currentLife').value;
             
-      
-        // }
+            saude.innerHTML = 
+            `Vida: ${currentLife}/${totalLife}
+            <input name="dano" id="currentLife"/>
+            <button id="currentLife" type="button" onclick="vidaAtual()" >Saúde atual</button>`
+
+            sender({
+                name,
+                currentLife
+            })
+            
+        }
                 
-        // function saniAtual() {
-        //     sanidade.innerHTML = `Sanidade: ${sAtual.value}/${sani.value} <input name="dano" id="danoS">
-        //     <button id="danosani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
-        
-        //   
-        // }
+        function saniAtual() {
+            let name = document.getElementById('player').value;
+            let stability = document.getElementById('stability').value;
+            let currentStability = document.getElementById('currentStability').value;
+            
+            sanidade.innerHTML = 
+            `Sanidade: ${currentStability}/${stability} 
+            <input name="dano" id="currentStability"/>
+            <button id="currentStabilityani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
+            
+            sender({
+                name,
+                currentStability
+            });
+        }
     </script>
 </head>
 <body class="container blue lighten-1">
