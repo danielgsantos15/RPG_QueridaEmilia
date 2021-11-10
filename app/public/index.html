@@ -9,6 +9,36 @@
     <title>Querida Emilia</title>
     <script>
 
+        function putOnScreen(name, life, stability, totalLife, totalStability) {
+            let personagem = document.getElementById('personagem');
+            personagem.innerHTML = personagem.innerHTML + `
+                <section class="card-panel section col s12">
+                <div class="row" id="player${name}">
+                    <div class="col s4">
+                        <label id="nick">Player:</label>
+                        <span id="nickSpan" name="${name}">${name}</span>
+                    </div>
+                    <div class="col s4">
+                        <label id="saude">Vida:</label>
+                        <span id="spanCurrentLife" name="${life}">${life}</span>/<span id="spanTotalLife" name="${totalLife}">${totalLife}</span>
+                        <input name="dano" id="currentLife"/>
+                        <button id="currentLifeButton" class="btn-small" type="button" onclick="updateStatus()" >Saúde atual</button>
+                    </div>
+                    <div class="col s4">
+                        <label id="sanidade">Sanidade:</label>s
+                        <span id="spanCurrentStability" name="${stability}">${stability}</span>/<span id="spanTotalStability" name="${totalStability}">${totalStability}</span>
+                        <input name="dano" id="currentStability">
+                        <button id="currentStabilityButton" class="btn-small" type="button" onclick="updateStatus()" >Sanidade atual</button>
+                    </div>
+                </div>
+                <div class=row>
+                    <div class="col s12">
+                        <p id="link"></p>
+                        <a href="http://localhost:8081/${name}" target="_blank"> http://localhost:8081/${name}</a>
+                    </div>
+                </div>
+            </section>`
+        }
         function criarPersonagem(){
             let name = document.getElementById('nickname').value;
             let life = document.getElementById('life').value;
@@ -19,33 +49,7 @@
                 return;
             }
 
-            personagem.innerHTML = personagem.innerHTML + `
-                <section class="card-panel section col s12">
-                <div class="row" id="player${name}">
-                    <div class="col s4">
-                        <label id="nick">Player:</label>
-                        <span id="nickSpan">${name}</span>
-                    </div>
-                    <div class="col s4">
-                        <label id="saude">Vida:</label>
-                        <span>${life}/${life}</span>
-                        <input name="dano" id="currentLife"/>
-                        <button id="currentLife" class="btn-small" type="button" onclick="vidaAtual()" >Saúde atual</button>
-                    </div>
-                    <div class="col s4">
-                        <label id="sanidade">Sanidade:</label>
-                        <span>${stability}/${stability}</span>
-                        <input name="dano" id="currentStability">
-                        <button id="currentStabilityani" class="btn-small" type="button" onclick="saniAtual()" >Sanidade atual</button>
-                    </div>
-                </div>
-                <div class=row>
-                    <div class="col s12">
-                        <p id="link"></p>
-                        <a href="http://localhost:8081/${name}" target="_blank"> http://localhost:8081/${name}</a>
-                    </div>
-                </div>
-            </section>`
+            putOnScreen(name, life, stability, life, stability)
 
             sender({
                 name: name,
@@ -65,7 +69,6 @@
         }
 
         function sender(personagem) {
-
             if(!personagem.hasOwnProperty('name') || !personagem.name) {
                 alert('falta nome no sender')
                 return;
@@ -93,38 +96,78 @@
             })
         }
 
-        function vidaAtual() {
-            let name = document.getElementById('nickSpan').value;
-            let totalLife = document.getElementById('life').value;
-            let currentLife = document.getElementById('currentLife').value;
-            
-            saude.innerHTML = 
-            `Vida: ${currentLife}/${totalLife}
-            <input name="dano" id="currentLife"/>
-            <button id="currentLife" type="button" onclick="vidaAtual()" >Saúde atual</button>`
+        function update(personagem) {
+            console.log(personagem)
+            if (!personagem.hasOwnProperty('name') || !personagem.name) {
+                alert('falta nome no sender')
+                return;
+            }
+             axios({
+                method: 'post',
+                url: 'http://localhost:8081/update',
+                data: personagem
+            })
+                .then(function (resposnse) {
+                    console.log(resposnse)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                    if (error.response) {
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error', error.message);
+                    }
+                })
+        }
 
-            sender({
-                name,
-                currentLife
+        function updateStatus() {
+            let name = document.getElementById('nickSpan').attributes.name.value;
+            let totalLife = document.getElementById('spanTotalLife').attributes.name.value;
+            let currentLife = document.getElementById('currentLife').value;
+            let totalStability = document.getElementById('currentStability').value;
+            let currentStability = document.getElementById('spanTotalStability').attributes.name.value;
+            
+
+            console.log(name, totalLife, currentLife, totalStability, currentStability);
+
+            update({
+                name: name,
+                currentLife: currentLife,
+                currentStability: currentStability
             })
             
         }
-                
-        function saniAtual() {
-            let name = document.getElementById('player').value;
-            let stability = document.getElementById('stability').value;
-            let currentStability = document.getElementById('currentStability').value;
-            
-            sanidade.innerHTML = 
-            `Sanidade: ${currentStability}/${stability} 
-            <input name="dano" id="currentStability"/>
-            <button id="currentStabilityani" type="button" onclick="saniAtual()" >Sanidade atual</button>`
-            
-            sender({
-                name,
-                currentStability
-            });
+
+        function show(){
+            axios({
+                method: 'post',
+                url: 'http://localhost:8081/data',
+            })
+            .then(function (response){
+                for(let personagem of response.data){
+                    if(personagem){
+                      putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability)
+                    }
+                }
+            })
+            .catch(function(error){
+                if (error.response) {
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
+                } else if (error.request) {
+                    console.log(error.request);
+                } else {
+                    console.log('Error', error.message);
+                }
+            })
         }
+        show()
+
     </script>
 </head>
 <body class="container blue lighten-1">

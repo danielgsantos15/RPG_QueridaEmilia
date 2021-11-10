@@ -4,11 +4,11 @@ const http = require('http');
 const server = http.createServer(app);
 const connection = require('./connection')
 let personagens = '';
-async function init() {
+async function charger() {
     personagens = await connection.getcharacters();
 }
 
-init();
+charger();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -20,16 +20,28 @@ app.get('/:name', (req, res) => {
     res.sendFile(__dirname + "/public/personagem.html");
 })
 
-app.post('/new', (req, res) => {
-    res.send('inserted')
+app.post('/new', async (req, res) => {
+    let personagem = req.body
+    let inserted = await connection.insertCharacter(personagem)
+    charger()
+    res.send(inserted)
 })
 
-app.post('/update/:type', (req, res) => {
+app.post('/data', (req, res) => {
+    res.send(personagens)
+})
+
+app.post('/update', async (req, res) => {
+    let personagem = req.body
+    let changed = await connection.updateCharacter(personagem)
+    charger()
+    res.send(changed)
     //rota para atualizar vida e sanidade
 })
 
 
-app.get('/get/:name', async (req, res) => {
+app.get('/get/:name',(req, res) => {
+    console.log(req.params.name)
     for (let personagem of personagens){
         if (req.params.name == personagem.name){
             res.send(personagem)

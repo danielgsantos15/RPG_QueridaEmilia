@@ -19,12 +19,37 @@ const connection = {
         const collection = db.collection('personagens');
         
         const findResult = await collection.find({}).toArray();
+        
         console.log(findResult)
         await close();
         return findResult;
     },
-    insertCharacter: async () => {
+    insertCharacter: async (personagem) => {
+        await connect();
+        const db = client.db('RPG');
+        const collection = db.collection('personagens');
+        
+        const insertResult = await collection.insertOne(personagem);
+        
+        await close();
+        return insertResult;
+    },
+    updateCharacter: async (personagem) => {
+        console.log(personagem)
+        await connect();
+        const db = client.db('RPG');
+        const collection = db.collection('personagens');
+        const filter = {name: personagem.name}
+        const toUpdate = {
+            $set: {
+                currentLife: personagem.currentLife,
+                currentStability: personagem.currentStability
+            }
+        }
+        const updateResult = await collection.updateOne(filter, toUpdate, {upsert: true});
 
+        await close();
+        return updateResult;
     }
 }
 
