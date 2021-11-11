@@ -8,7 +8,10 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <title>Querida Emilia</title>
     <script>
-
+         function clearCharacter() {
+            location.reload();
+        }
+        
         function putOnScreen(name, life, stability, totalLife, totalStability) {
             let personagem = document.getElementById('personagem');
             personagem.innerHTML = personagem.innerHTML + `
@@ -25,7 +28,7 @@
                         <button id="currentLifeButton" class="btn-small" type="button" onclick="updateStatus()" >Saúde atual</button>
                     </div>
                     <div class="col s4">
-                        <label id="sanidade">Sanidade:</label>s
+                        <label id="sanidade">Sanidade:</label>
                         <span id="spanCurrentStability" name="${stability}">${stability}</span>/<span id="spanTotalStability" name="${totalStability}">${totalStability}</span>
                         <input name="dano" id="currentStability">
                         <button id="currentStabilityButton" class="btn-small" type="button" onclick="updateStatus()" >Sanidade atual</button>
@@ -38,7 +41,9 @@
                     </div>
                 </div>
             </section>`
+            
         }
+
         function criarPersonagem(){
             let name = document.getElementById('nickname').value;
             let life = document.getElementById('life').value;
@@ -97,7 +102,6 @@
         }
 
         function update(personagem) {
-            console.log(personagem)
             if (!personagem.hasOwnProperty('name') || !personagem.name) {
                 alert('falta nome no sender')
                 return;
@@ -107,8 +111,11 @@
                 url: 'http://localhost:8081/update',
                 data: personagem
             })
-                .then(function (resposnse) {
-                    console.log(resposnse)
+                .then( response => {
+                    console.log(response)
+                    setTimeout(() => {
+                        location.reload(true)
+                    }, 4000);
                 })
                 .catch(function (error) {
                     console.log(error)
@@ -125,21 +132,22 @@
         }
 
         function updateStatus() {
+            let personagem = document.getElementById('personagem');
             let name = document.getElementById('nickSpan').attributes.name.value;
             let totalLife = document.getElementById('spanTotalLife').attributes.name.value;
             let currentLife = document.getElementById('currentLife').value;
-            let totalStability = document.getElementById('currentStability').value;
-            let currentStability = document.getElementById('spanTotalStability').attributes.name.value;
-            
+            let currentStability = document.getElementById('currentStability').value;
+            let totalStability = document.getElementById('spanTotalStability').attributes.name.value;
 
-            console.log(name, totalLife, currentLife, totalStability, currentStability);
+            if(!currentLife) currentLife = document.getElementById('spanCurrentLife').attributes.name.value;
+            if(!currentStability) currentStability = document.getElementById('spanCurrentStability').attributes.name.value;
 
             update({
                 name: name,
                 currentLife: currentLife,
                 currentStability: currentStability
             })
-            
+
         }
 
         function show(){
@@ -150,7 +158,7 @@
             .then(function (response){
                 for(let personagem of response.data){
                     if(personagem){
-                      putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability)
+                        putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability)
                     }
                 }
             })
