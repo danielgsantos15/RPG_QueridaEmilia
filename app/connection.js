@@ -20,7 +20,6 @@ const connection = {
         
         const findResult = await collection.find({}).toArray();
         
-        console.log(findResult)
         await close();
         return findResult;
     },
@@ -35,7 +34,6 @@ const connection = {
         return insertResult;
     },
     updateCharacter: async (personagem) => {
-        console.log(personagem)
         await connect();
         const db = client.db('RPG');
         const collection = db.collection('personagens');
@@ -50,6 +48,13 @@ const connection = {
 
         await close();
         return updateResult;
+    },
+    clearData: async () => {
+        await connect();
+        const db = client.db('RPG');
+        const collection = db.collection('personagens');
+        await collection.deleteMany({})
+        await close();
     }
 }
 
