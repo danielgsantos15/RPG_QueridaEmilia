@@ -6,48 +6,62 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Averia+Libre:ital@1&display=swap" rel="stylesheet">
+
     <title>Personagem</title>
+    <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
     <script>
+        const socket = io();
         let room = window.location.pathname.replace(/\\|\//g, '');
 
-        
+        socket.on('update', (personagem) => {
+            console.log(personagem)
+        })
+
         function getter() {
             axios({
                 method: 'get',
                 url: 'http://localhost:8081/get/' + room,
             })
-            .then(function (response){
-                let personagem = response.data
-                let nome = document.querySelector("span#nome")
-                let fullLife = document.querySelector("span#fullLife")
-                let fullSanity = document.querySelector("span#fullSanity")
+                .then(function (response) {
+                    let personagem = response.data
+                    let nome = document.querySelector("span#nome")
+                    let fullLife = document.querySelector("span#fullLife")
+                    let fullSanity = document.querySelector("span#fullSanity")
 
-                nome.innerHTML = personagem.name
-                currentLife.innerHTML = personagem.currentLife
-                fullLife.innerHTML = personagem.totalLife
-                fullSanity.innerHTML = personagem.totalStability
-                currentSanity.innerHTML = personagem.currentStability
-            })
-            .catch(function(error){
-                if (error.response) {
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    console.log(error.request);
-                } else {
-                    console.log('Error', error.message);
-                }
-            })
+                    nome.innerHTML = personagem.name
+                    currentLife.innerHTML = personagem.currentLife
+                    fullLife.innerHTML = personagem.totalLife
+                    fullSanity.innerHTML = personagem.totalStability
+                    currentSanity.innerHTML = personagem.currentStability
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error', error.message);
+                    }
+                })
         }
-        
-        setInterval(() => {
-            getter()
-        }, 5000);
+
+        // setInterval(() => {
+        //     getter()
+        // }, 5000);
 
         getter()
     </script>
     <style>
+        body {
+            font-family: 'Averia Libre', cursive;
+
+        }
+
         .bar {
             border-radius: 2px;
             border: 1px solid black;
@@ -62,15 +76,21 @@
 
         #nameLabel {
             border: none;
+            color: #fff;
+            font-size: 15pt;
+            text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+
         }
 
 
         #lifeLabel {
+            font-size: 14pt;
             background-color: red;
             color: white;
         }
 
         #SanityLabel {
+            font-size: 14pt;
             background-color: blue;
             text-align: center;
             color: white;
