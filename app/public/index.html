@@ -47,21 +47,21 @@
                 <div class="row" id="player${name}">
                     <div class="col s4">
                         <label class="white-text" id="nick">Player:</label>
-                        <span id="nickSpan" name="${name}">${name}</span>
+                        <span id="nickSpan${name}" name="${name}">${name}</span>
                     </div><br>
                     <div class="col s4">
                             <img class="col s9" id="profileImage" alt="Imagem do Jogador" src="${image}"/>
                     </div>
                     <div class="col s4">
                         <label class="white-text" id="saude">Vida:</label>
-                        <span id="spanCurrentLife" name="${life}">${life}</span>/<span id="spanTotalLife" name="${totalLife}">${totalLife}</span>
-                        <input name="dano" id="currentLife"/>
+                        <span id="spanCurrentLife${name}" name="${life}">${life}</span>/<span id="spanTotalLife${name}" name="${totalLife}">${totalLife}</span>
+                        <input name="dano" id="currentLife${name}"/>
                     </div>
                     <div class="col s4">
                         <label class="white-text" id="sanidade">Sanidade:</label>
-                        <span id="spanCurrentStability" name="${stability}">${stability}</span>/<span id="spanTotalStability" name="${totalStability}">${totalStability}</span>
-                        <input name="dano" id="currentStability">
-                        <button id="currentStabilityButton" class="btn-small waves-effect waves-light red darken-4 right" type="button" onclick="updateStatus()" >Alterar saúde</button>
+                        <span id="spanCurrentStability${name}" name="${stability}">${stability}</span>/<span id="spanTotalStability${name}" name="${totalStability}">${totalStability}</span>
+                        <input name="dano" id="currentStability${name}">
+                        <button id="currentStabilityButton" class="btn-small waves-effect waves-light red darken-4 right" type="button" onclick="updateStatus('${name}')" >Alterar saúde</button>
                     </div>
                 </div>
                 <div class=row>
@@ -165,22 +165,33 @@
                 })
         }
 
-        function updateStatus() {
+        function updateStatus(player) {
             let personagem = document.getElementById('personagem');
-            let name = document.getElementById('nickSpan').attributes.name.value;
-            let totalLife = document.getElementById('spanTotalLife').attributes.name.value;
-            let currentLife = document.getElementById('currentLife').value;
-            let currentStability = document.getElementById('currentStability').value;
-            let totalStability = document.getElementById('spanTotalStability').attributes.name.value;
+            console.log(player)
+            let name = document.getElementById('nickSpan'+ player).attributes.name.value;
+            let totalLife = document.getElementById('spanTotalLife'+ player).attributes.name.value;
+            let currentLife = document.getElementById('currentLife'+ player).value;
+            let currentStability = document.getElementById('currentStability'+ player).value;
+            let totalStability = document.getElementById('spanTotalStability'+ player).attributes.name.value;
 
             if(!currentLife) currentLife = document.getElementById('spanCurrentLife').attributes.name.value;
             if(!currentStability) currentStability = document.getElementById('spanCurrentStability').attributes.name.value;
 
-            update({
-                name: name,
-                currentLife: currentLife,
-                currentStability: currentStability
+
+            console.log({
+                name,
+                currentLife,
+                totalLife,
+                currentStability,
+                totalStability
             })
+            // update({
+            //     name,
+            //     currentLife,
+            //     totalLife,
+            //     currentStability,
+            //     totalStability
+            // })
 
         }
 
