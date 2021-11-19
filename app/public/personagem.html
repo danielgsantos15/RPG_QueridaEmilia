@@ -16,6 +16,8 @@
         const socket = io();
         let room = window.location.pathname.replace(/\\|\//g, '');
 
+        socket.emit('room', room.replace(/%20/g, ' '));
+
         socket.on('update', (personagem) => {
             console.log(personagem)
         })
