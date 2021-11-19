@@ -2,7 +2,18 @@ const express = require("express");
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
-const connection = require('./connection')
+const connection = require('./connection');
+
+const { Server } = require("socket.io");
+const io = new Server(server, { /* options */ });
+
+io.on("connection", (socket) => {
+    socket.on('room', (room) => {
+        socket.join(room)
+        console.log('na sala', room)
+    })
+});
+
 let personagens = '';
 async function charger() {
     personagens = await connection.getcharacters();
@@ -16,7 +27,14 @@ app.get("/", function(req, res) {
     res.sendFile(__dirname + "/public/index.html")
 })
 
-app.get('/:name', (req, res) => {    
+app.get('/clear', async (req, res) => {
+
+    await connection.clearData();
+    charger();
+    res.send('cleaned')
+})
+
+app.get('/:name', (req, res) => {
     res.sendFile(__dirname + "/public/personagem.html");
 })
 
@@ -35,13 +53,12 @@ app.post('/update', async (req, res) => {
     let personagem = req.body
     let changed = await connection.updateCharacter(personagem)
     charger()
+    console.log(personagem)
+    io.to(personagem.name).emit('update', personagem);
     res.send(changed)
-    //rota para atualizar vida e sanidade
 })
 
-
 app.get('/get/:name',(req, res) => {
-    console.log(req.params.name)
     for (let personagem of personagens){
         if (req.params.name == personagem.name){
             res.send(personagem)
