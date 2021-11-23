@@ -17,46 +17,30 @@
         let room = window.location.pathname.replace(/\\|\//g, '');
 
         socket.emit('room', room.replace(/%20/g, ' '));
+        socket.emit('getter', room.replace(/%20/g, ' '));
 
-        socket.on('update', (personagem) => {
-            console.log(personagem)
-        })
+        function build(personagem) {
+            let nome = document.querySelector("span#nome")
+            let fullLife = document.querySelector("span#fullLife")
+            let fullSanity = document.querySelector("span#fullSanity")
 
-        function getter() {
-            axios({
-                method: 'get',
-                url: 'http://localhost:8081/get/' + room,
-            })
-                .then(function (response) {
-                    let personagem = response.data
-                    let nome = document.querySelector("span#nome")
-                    let fullLife = document.querySelector("span#fullLife")
-                    let fullSanity = document.querySelector("span#fullSanity")
-
-                    nome.innerHTML = personagem.name
-                    currentLife.innerHTML = personagem.currentLife
-                    fullLife.innerHTML = personagem.totalLife
-                    fullSanity.innerHTML = personagem.totalStability
-                    currentSanity.innerHTML = personagem.currentStability
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log('Error', error.message);
-                    }
-                })
+            nome.innerHTML = personagem.name;
+            currentLife.innerHTML = personagem.currentLife;
+            fullLife.innerHTML = personagem.totalLife;
+            fullSanity.innerHTML = personagem.totalStability;
+            currentSanity.innerHTML = personagem.currentStability;
         }
 
-        // setInterval(() => {
-        //     getter()
-        // }, 5000);
+        socket.on('data', (personagem) => {
+            build(personagem)
+        });
 
-        getter()
+        socket.on('update', (personagem) => {
+            build(personagem)
+        });
+
+
+       
     </script>
     <style>
         body {
@@ -108,5 +92,4 @@
         <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>
     </div>
 </body>
-
 </html>
