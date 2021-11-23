@@ -7,13 +7,6 @@ const connection = require('./connection');
 const { Server } = require("socket.io");
 const io = new Server(server, { /* options */ });
 
-io.on("connection", (socket) => {
-    socket.on('room', (room) => {
-        socket.join(room)
-        console.log('na sala', room)
-    })
-});
-
 let personagens = '';
 async function charger() {
     personagens = await connection.getcharacters();
@@ -42,6 +35,7 @@ app.post('/new', async (req, res) => {
     let personagem = req.body
     let inserted = await connection.insertCharacter(personagem)
     charger()
+    io.to(personagem.name).emit('update', personagem);
     res.send(inserted)
 })
 
@@ -53,18 +47,24 @@ app.post('/update', async (req, res) => {
     let personagem = req.body
     let changed = await connection.updateCharacter(personagem)
     charger()
-    console.log(personagem)
+    console.log('update')
     io.to(personagem.name).emit('update', personagem);
     res.send(changed)
 })
 
-app.get('/get/:name',(req, res) => {
-    for (let personagem of personagens){
-        if (req.params.name == personagem.name){
-            res.send(personagem)
+io.on("connection", (socket) => {
+    socket.on('room', (room) => {
+        socket.join(room)
+    })
+
+    socket.on('getter', (room) => {
+        for (let personagem of personagens){
+            if (room == personagem.name){
+                socket.emit('data', personagem)
+            }
         }
-    }
-})
+    })
+});
 
 
 server.listen(process.env.PORT, function() {
