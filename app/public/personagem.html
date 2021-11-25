@@ -32,12 +32,14 @@
                     let nome = document.querySelector("span#nome")
                     let fullLife = document.querySelector("span#fullLife")
                     let fullSanity = document.querySelector("span#fullSanity")
+                    let imagem = document.querySelector("img#imagem")
 
                     nome.innerHTML = personagem.name
                     currentLife.innerHTML = personagem.currentLife
                     fullLife.innerHTML = personagem.totalLife
                     fullSanity.innerHTML = personagem.totalStability
                     currentSanity.innerHTML = personagem.currentStability
+                    imagem.src = personagem.image
                 })
                 .catch(function (error) {
                     if (error.response) {
@@ -97,12 +99,17 @@
             text-align: center;
             color: white;
         }
+
+        #imagem{
+            width: 200px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
 <body>
     <div id=box>
-        <div id=photo></div>
+        <div id=photo><img id="imagem" src="" alt="Jogador"></div>
         <div class="bar" id="nameLabel"><span id="nome"></span></div>
         <div class="bar" id="lifeLabel"><span id="currentLife"></span>/<span id="fullLife"></span></div>
         <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>

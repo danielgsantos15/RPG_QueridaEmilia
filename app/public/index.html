@@ -31,11 +31,51 @@
         }
 
         #profileImage{
-            border-radius: 50%;
+            margin-top: 15px;
+        }
+
+        #preview{
+            width: 150px;
             margin-top: 15px;
         }
     </style>
+    </head>
+                <body class="container">
+                    <header>
+                        <h1>Criando personagem</h1>
+                    </header>
+                    <div class="row" id="sessao">
+                        <section class="card-panel section col s12" id="criaçao">
+                            <div class="row">
+                                <form method="post" enctype="multipart/form-data" action="/upload">
+                                    <div class="input-field col s4">
+                                        <input class="white-text" type="text" placeholder="nome" name="personagem" id="nickname" required>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input class="white-text" name="vida" placeholder="vida"  id="life" required>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input class="white-text" name="sanidade" placeholder="sanidade"  id="stability" required>
+                                    </div>
+                                    <div class="input-field col s4">
+                                        <input type="file" name="image" id="playerImage" accept=".jpg, .jpeg, .png">
+                                        <img id="preview" src="" alt="">
+                                    </div>
+                                    <div class="col s4 right">
+                                        <input  type="submit" class="btn-small waves-effect waves-light red darken-4 right" onclick="criarPersonagem()" value="Criar personagem">
+                                </form>
+                            </div>
+                            </div>
+                        </section>
+                    </div>
+                    <div class="row" id="personagem">
+                    </div>
+                    <footer>
+                        <p>&copy; Daniel Santos</p>
+                    </footer>
     <script>
+        let base64 = '';
+
          function clearCharacter() {
             location.reload();
         }
@@ -74,20 +114,42 @@
             
         }
 
+        document.getElementsByName('image')[0].addEventListener('change', previewFile);
+        let image = document.getElementsByName('image')[0].addEventListener('change', previewFile);
+        let preview = document.querySelector('img#preview');
+
+        function previewFile(event) {
+            let reader = new FileReader();
+            let file = event.target.files[0];
+            let image = document.getElementsByName('image');
+            
+            
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                reader.result
+                preview.src = reader.result;
+                image.src = reader.result;
+                console.log(reader.result)
+                base64 = reader.result
+                // base64 = btoa(base64)
+            }
+            
+        }
+        
         function criarPersonagem(){
             let name = document.getElementById('nickname').value;
             let life = document.getElementById('life').value;
             let stability = document.getElementById('stability').value;
             let image = document.getElementById('playerImage').value;
-            console.log(image)
-
-            if (!name || !life || !stability) {
-                alert('missing fields:name or life or stability');
+            image = base64;
+            
+                if (!name || !life || !stability) {
+                    alert('missing fields:name or life or stability');
                 return;
             }
-
+            
             putOnScreen(name, life, stability, life, stability, image)
-
+            
             sender({
                 name: name,
                 currentLife: life,
@@ -96,7 +158,6 @@
                 totalStability: stability,
                 image: image
             })
-
             clear();
         }
 
@@ -104,7 +165,9 @@
             document.getElementById('nickname').value = '';
             document.getElementById('life').value = '';
             document.getElementById('stability').value = '';
-            document.getElementById('image').value = '';
+            document.getElementById('playerImage').value = '';
+            preview.src = '';
+            base64 = '';
         }
 
         function sender(personagem) {
@@ -185,13 +248,13 @@
                 currentStability,
                 totalStability
             })
-            // update({
-            //     name,
-            //     currentLife,
-            //     totalLife,
-            //     currentStability,
-            //     totalStability
-            // })
+            update({
+                name,
+                currentLife,
+                totalLife,
+                currentStability,
+                totalStability
+            })
 
         }
 
@@ -223,36 +286,5 @@
 
     </script>
     
-</head>
-<body class="container">
-    <header>
-        <h1>Criando personagem</h1>
-    </header>
-    <div class="row" id="sessao">
-        <section class="card-panel section col s12" id="criaçao">
-            <div class="row">
-                <div class="input-field col s4">
-                    <input type="text" placeholder="nome" name="personagem" id="nickname" required>
-                </div>
-                <div class="input-field col s4">
-                    <input name="vida" placeholder="vida"  id="life" required>
-                </div>
-                <div class="input-field col s4">
-                    <input name="sanidade" placeholder="sanidade"  id="stability" required>
-                </div>
-                <div class="input-field col s4">
-                    <input type="file" name="image" id="playerImage">
-                </div>
-                <div class="col s4 right">
-                    <button class="btn-small waves-effect waves-light red darken-4 right" onclick="criarPersonagem()">Criar personagem</button>
-                </div>
-            </div>
-        </section>
-    </div>
-    <div class="row" id="personagem">
-    </div>
-    <footer>
-        <p>&copy; Daniel Santos</p>
-    </footer>
 </body>
 </html>
