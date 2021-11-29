@@ -3,6 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const connection = require('./connection');
+// const multer = require("multer");
 
 const { Server } = require("socket.io");
 const io = new Server(server, { /* options */ });
@@ -16,9 +17,27 @@ charger();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// app.set('view engine' , 'ejs');
+
+// const storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, "uploads/")
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, file.originalname + Date.now());
+//     }
+// })
+
+// const upload = multer({storage})
+
+
 app.get("/", function(req, res) {
     res.sendFile(__dirname + "/public/index.html")
 })
+
+// app.post("/upload", upload.single("image") , (req, res) => {
+//     res.send("imagem recebida!");
+// })
 
 app.get('/clear', async (req, res) => {
 

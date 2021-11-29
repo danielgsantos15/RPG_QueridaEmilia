@@ -29,6 +29,7 @@
             fullLife.innerHTML = personagem.totalLife;
             fullSanity.innerHTML = personagem.totalStability;
             currentSanity.innerHTML = personagem.currentStability;
+            imagem.src = personagem.image
         }
 
         socket.on('data', (personagem) => {
@@ -38,6 +39,27 @@
         socket.on('update', (personagem) => {
             build(personagem)
         });
+
+        function getter() {
+            axios({
+                method: 'get',
+                url: 'http://localhost:8081/get/' + room,
+            })
+            .then(function (response) {
+                build(response)
+                })
+                .catch(function (error) {
+                    if (error.response) {
+                        console.log(error.response.data);
+                        console.log(error.response.status);
+                        console.log(error.response.headers);
+                    } else if (error.request) {
+                        console.log(error.request);
+                    } else {
+                        console.log('Error', error.message);
+                    }
+                })
+        }
 
 
        
@@ -81,12 +103,17 @@
             text-align: center;
             color: white;
         }
+
+        #imagem{
+            width: 200px;
+            border-radius: 50%;
+        }
     </style>
 </head>
 
 <body>
     <div id=box>
-        <div id=photo></div>
+        <div id=photo><img id="imagem" src="" alt="Jogador"></div>
         <div class="bar" id="nameLabel"><span id="nome"></span></div>
         <div class="bar" id="lifeLabel"><span id="currentLife"></span>/<span id="fullLife"></span></div>
         <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>
