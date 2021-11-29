@@ -66,7 +66,6 @@ app.post('/update', async (req, res) => {
     let personagem = req.body
     let changed = await connection.updateCharacter(personagem)
     charger()
-    console.log('update')
     io.to(personagem.name).emit('update', personagem);
     res.send(changed)
 })
