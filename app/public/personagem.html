@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Averia+Libre:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <title>Personagem</title>
     <script src="https://cdn.socket.io/4.4.0/socket.io.min.js" integrity="sha384-1fOn6VtTq3PWwfsOrk45LnYcGosJwzMHv+Xh/Jx5303FVOXzEnw0EpLv30mtjmlj" crossorigin="anonymous"></script>
@@ -29,7 +30,7 @@
             fullLife.innerHTML = personagem.totalLife;
             fullSanity.innerHTML = personagem.totalStability;
             currentSanity.innerHTML = personagem.currentStability;
-            imagem.src = personagem.image
+            imagem.src = 'http://localhost:8081/uploads/' +personagem.image
         }
 
         socket.on('data', (personagem) => {
@@ -39,29 +40,6 @@
         socket.on('update', (personagem) => {
             build(personagem)
         });
-
-        function getter() {
-            axios({
-                method: 'get',
-                url: 'http://localhost:8081/get/' + room,
-            })
-            .then(function (response) {
-                build(response)
-                })
-                .catch(function (error) {
-                    if (error.response) {
-                        console.log(error.response.data);
-                        console.log(error.response.status);
-                        console.log(error.response.headers);
-                    } else if (error.request) {
-                        console.log(error.request);
-                    } else {
-                        console.log('Error', error.message);
-                    }
-                })
-        }
-
-
        
     </script>
     <style>
@@ -78,7 +56,6 @@
         #box {
             text-align: center;
             text-align: center;
-            width: 200px;
             padding: 2px;
         }
 
@@ -104,19 +81,19 @@
             color: white;
         }
 
-        #imagem{
-            width: 200px;
-            border-radius: 50%;
-        }
     </style>
 </head>
 
 <body>
-    <div id=box>
-        <div id=photo><img id="imagem" src="" alt="Jogador"></div>
-        <div class="bar" id="nameLabel"><span id="nome"></span></div>
-        <div class="bar" id="lifeLabel"><span id="currentLife"></span>/<span id="fullLife"></span></div>
-        <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>
+    <div id=box class="row">
+        <div class="col s2"id=photo>
+            <img class="circle" width="100" id="imagem" src="" alt="Jogador">
+        </div>
+        <div class="col s10">
+            <div class="bar" id="nameLabel"><span id="nome"></span></div>
+            <div class="bar" id="lifeLabel"><span id="currentLife"></span>/<span id="fullLife"></span></div>
+            <div class="bar" id="SanityLabel"><span id="currentSanity"></span>/<span id="fullSanity"></span></div>
+        </div>
     </div>
 </body>
 </html>
