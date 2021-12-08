@@ -2,11 +2,30 @@ const express = require("express");
 const app = express();
 const http = require('http');
 const server = http.createServer(app);
+const bodyParser = require('body-parser')
 const connection = require('./connection');
-// const multer = require("multer");
+const fs = require('fs');
+const expressLayouts = require('express-ejs-layouts')
+const multer = require('multer');
+const path = require('path');
+const cors = require('cors');
+
+
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'app/public/uploads/')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + path.extname(file.originalname))
+    }
+  })
+
+const upload = multer({ storage: storage });
+
 
 const { Server } = require("socket.io");
-const io = new Server(server, { /* options */ });
+const io = new Server(server);
 
 let personagens = '';
 async function charger() {
@@ -14,30 +33,17 @@ async function charger() {
 }
 
 charger();
+app.use(cors())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
-// app.set('view engine' , 'ejs');
-
-// const storage = multer.diskStorage({
-//     destination: function(req, file, cb) {
-//         cb(null, "uploads/")
-//     },
-//     filename: function(req, file, cb) {
-//         cb(null, file.originalname + Date.now());
-//     }
-// })
-
-// const upload = multer({storage})
+app.set('view engine', 'ejs')     // Setamos que nossa engine será o ejs
+app.use(expressLayouts)           // Definimos que vamos utilizar o express-ejs-layouts na nossa aplicação
+app.use(express.static(__dirname + '/public'))
 
 
 app.get("/", function(req, res) {
-    res.sendFile(__dirname + "/public/index.html")
+    res.render(__dirname + "/public/")
 })
-
-// app.post("/upload", upload.single("image") , (req, res) => {
-//     res.send("imagem recebida!");
-// })
 
 app.get('/clear', async (req, res) => {
 
@@ -84,7 +90,15 @@ io.on("connection", (socket) => {
     })
 });
 
+app.post('/file-upload', upload.single('perfilPhoto'), function (req, res) {
+    try {
+        return res.status(200).send(req.file);
+    } catch(e) {
+        console.log(e);
+        return res.status(404).send(e);
+    }
+});
 
-server.listen(process.env.PORT, function() {
+server.listen(process.env.PORT, '0.0.0.0', function() {
     console.log("servidor rodando na url http://localhost:" + process.env.PORT);
 });
