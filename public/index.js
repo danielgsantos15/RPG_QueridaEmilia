@@ -18,7 +18,7 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
                 <span id="nickSpan${name}" name="${name}">${name}</span>
             </div><br>
             <div class="col s4">
-                    <img class="col s9" id="profileImage" alt="Imagem do Jogador" src="http://localhost:8081/uploads/${image}"/>
+                    <img class="col s9" id="profileImage" alt="Imagem do Jogador" src="http://localhost:3000/uploads/${image}"/>
             </div>
             <div class="col s4">
                 <label class="white-text" id="saude">Vida:</label>
@@ -35,7 +35,7 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
         <div class=row>
             <div class="col s12">
                 <p id="link"></p>
-                <a href="http://localhost:8081/${name}" target="_blank"> http://localhost:8081/${name}</a>
+                <a href="http://localhost:3000/${name}" target="_blank"> http://localhost:3000/${name}</a>
             </div>
         </div>
     </section>`
@@ -81,7 +81,7 @@ function sender(personagem) {
 
     axios({
         method: 'post',
-        url: 'http://localhost:8081/new',
+        url: 'http://localhost:3000/new',
         data: personagem
     })
     .then(function (resposnse) {
@@ -108,7 +108,7 @@ function update(personagem) {
     }
         axios({
         method: 'post',
-        url: 'http://localhost:8081/update',
+        url: 'http://localhost:3000/update',
         data: personagem
     })
         .then( response => {
@@ -164,7 +164,7 @@ function updateStatus(player) {
 function show(){
     axios({
         method: 'post',
-        url: 'http://localhost:8081/data',
+        url: 'http://localhost:3000/data',
     })
     .then(function (response){
         for(let personagem of response.data){

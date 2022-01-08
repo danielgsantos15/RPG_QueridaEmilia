@@ -30,7 +30,7 @@
             fullLife.innerHTML = personagem.totalLife;
             fullSanity.innerHTML = personagem.totalStability;
             currentSanity.innerHTML = personagem.currentStability;
-            imagem.src = 'http://localhost:8081/uploads/' +personagem.image
+            imagem.src = 'http://localhost:3000/uploads/' +personagem.image
         }
 
         socket.on('data', (personagem) => {

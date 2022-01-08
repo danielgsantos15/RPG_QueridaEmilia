@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
-
 const path = require('path');
 const multer = require('multer');
+const connection = require('./../models/connection');
+
+
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'public/uploads/')
@@ -33,7 +36,8 @@ router.post('/new', async (req, res) => {
     res.send(inserted)
 })
 
-router.post('/data', (req, res) => {
+router.post('/data', async(req, res) => {
+    let personagens = await connection.getcharacters();
     res.send(personagens)
 })
 

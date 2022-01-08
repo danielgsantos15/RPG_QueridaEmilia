@@ -20,7 +20,7 @@ function criarPersonagem(){
     <p id="link"></p>
     </div>
     </section>`
-    link.innerHTML = "http://localhost:8081/" + nome.value + "/" + vida.value + "/" + sani.value
+    link.innerHTML = "http://localhost:3000/" + nome.value + "/" + vida.value + "/" + sani.value
 }
 }
 
