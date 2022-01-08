@@ -2,7 +2,7 @@
   "name": "queridaemilia",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "app/server.js",
   "dependencies": {
     "axios": "^0.24.0",
     "body-parser": "^1.19.0",
