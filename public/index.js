@@ -97,39 +97,14 @@ function sender(personagem) {
     })
 }
 
-function update(personagem) {
-    if (!personagem.hasOwnProperty('name') || !personagem.name) {
-        alert('falta nome no sender')
-        return;
-    }
-        axios({
-        method: 'post',
-        url: 'http://localhost:3000/update',
-        data: personagem
-    })
-        .then( response => {
-            console.log(response)
-            setTimeout(() => {
-                location.reload(true)
-            }, 4000);
-        })
-        .catch(function (error) {
-            console.log(error)
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-        })
+function attOneChar(personagem) {
+    let CurrentLife = document.getElementById('spanCurrentLife'+ personagem.name)
+    CurrentLife.innerText = personagem.currentLife;
+    let CurrentStability = document.getElementById('spanCurrentStability'+ personagem.name)
+    CurrentStability.innerText = personagem.currentStability;
 }
 
 function updateStatus(player) {
-    let personagem = document.getElementById('personagem');
-    console.log(player)
     let name = document.getElementById('nickSpan'+ player).attributes.name.value;
     let totalLife = document.getElementById('spanTotalLife'+ player).attributes.name.value;
     let currentLife = document.getElementById('currentLife'+ player).value;
@@ -139,7 +114,7 @@ function updateStatus(player) {
     if(!currentLife) currentLife = document.getElementById('spanCurrentLife').attributes.name.value;
     if(!currentStability) currentStability = document.getElementById('spanCurrentStability').attributes.name.value;
 
-    update({
+    socket.emit('update character', {
         name,
         currentLife,
         totalLife,
@@ -170,4 +145,8 @@ socket.on('characters data', (personagens) => {
             putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability, personagem.image)
         }
     }
+})
+
+socket.on('update', (personagem) => {
+    attOneChar(personagem)
 })

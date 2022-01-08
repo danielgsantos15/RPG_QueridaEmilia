@@ -38,8 +38,10 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on(() => {
-        socket.emit()
+    socket.on('update character', async (personagem) => {
+        await connection.updateCharacter(personagem)
+        socket.emit('update', personagem)
+        io.to(personagem.name).emit('update', personagem);
     })
 
 });

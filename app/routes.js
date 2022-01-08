@@ -35,17 +35,9 @@ router.post('/new', async (req, res) => {
     res.send(inserted)
 })
 
-//usar socket
-router.post('/data', async(req, res) => {
-    let personagens = await connection.getcharacters();
-    res.send(personagens)
-})
-
 router.post('/update', async (req, res) => {
     let personagem = req.body
-    let changed = await connection.updateCharacter(personagem)
-    charger()
-    io.to(personagem.name).emit('update', personagem);
+    
     res.send(changed)
 })
 
