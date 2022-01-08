@@ -1,9 +1,5 @@
-
 let image = '';
-
-
-
-
+var socket = io();
 function clearCharacter() {
     location.reload();
 }
@@ -143,14 +139,6 @@ function updateStatus(player) {
     if(!currentLife) currentLife = document.getElementById('spanCurrentLife').attributes.name.value;
     if(!currentStability) currentStability = document.getElementById('spanCurrentStability').attributes.name.value;
 
-
-    console.log({
-        name,
-        currentLife,
-        totalLife,
-        currentStability,
-        totalStability
-    })
     update({
         name,
         currentLife,
@@ -159,31 +147,6 @@ function updateStatus(player) {
         totalStability
     })
 
-}
-
-function show(){
-    axios({
-        method: 'post',
-        url: 'http://localhost:3000/data',
-    })
-    .then(function (response){
-        for(let personagem of response.data){
-            if(personagem){
-                putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability, personagem.image)
-            }
-        }
-    })
-    .catch(function(error){
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log('Error', error.message);
-        }
-    })
 }
 
 Dropzone.options.logoDropZone = {
@@ -200,7 +163,11 @@ Dropzone.options.logoDropZone = {
     }
 }
 
-
-
-
-show();
+socket.emit('get characters');
+socket.on('characters data', (personagens) => {
+    for(let personagem of personagens){
+        if(personagem){
+            putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability, personagem.image)
+        }
+    }
+})

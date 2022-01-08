@@ -23,10 +23,9 @@ router.get('/clear', async (req, res) => {
     res.send('cleaned')
 })
 
-// // refatorar com socket
-// router.get('/:name', (req, res) => {
-//     res.sendFile(__dirname + "/../public/personagem.html");
-// })
+router.get('/:name', (req, res) => {
+    res.sendFile(__dirname + "/../public/personagem.html");
+})
 
 router.post('/new', async (req, res) => {
     let personagem = req.body
@@ -36,6 +35,7 @@ router.post('/new', async (req, res) => {
     res.send(inserted)
 })
 
+//usar socket
 router.post('/data', async(req, res) => {
     let personagens = await connection.getcharacters();
     res.send(personagens)
