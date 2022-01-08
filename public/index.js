@@ -1,9 +1,5 @@
-
 let image = '';
-
-
-
-
+var socket = io();
 function clearCharacter() {
     location.reload();
 }
@@ -18,7 +14,7 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
                 <span id="nickSpan${name}" name="${name}">${name}</span>
             </div><br>
             <div class="col s4">
-                    <img class="col s9" id="profileImage" alt="Imagem do Jogador" src="http://localhost:8081/uploads/${image}"/>
+                    <img class="col s9" id="profileImage" alt="Imagem do Jogador" src="http://localhost:3000/uploads/${image}"/>
             </div>
             <div class="col s4">
                 <label class="white-text" id="saude">Vida:</label>
@@ -35,7 +31,7 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
         <div class=row>
             <div class="col s12">
                 <p id="link"></p>
-                <a href="http://localhost:8081/${name}" target="_blank"> http://localhost:8081/${name}</a>
+                <a href="http://localhost:3000/${name}" target="_blank"> http://localhost:3000/${name}</a>
             </div>
         </div>
     </section>`
@@ -81,7 +77,7 @@ function sender(personagem) {
 
     axios({
         method: 'post',
-        url: 'http://localhost:8081/new',
+        url: 'http://localhost:3000/new',
         data: personagem
     })
     .then(function (resposnse) {
@@ -101,39 +97,14 @@ function sender(personagem) {
     })
 }
 
-function update(personagem) {
-    if (!personagem.hasOwnProperty('name') || !personagem.name) {
-        alert('falta nome no sender')
-        return;
-    }
-        axios({
-        method: 'post',
-        url: 'http://localhost:8081/update',
-        data: personagem
-    })
-        .then( response => {
-            console.log(response)
-            setTimeout(() => {
-                location.reload(true)
-            }, 4000);
-        })
-        .catch(function (error) {
-            console.log(error)
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else if (error.request) {
-                console.log(error.request);
-            } else {
-                console.log('Error', error.message);
-            }
-        })
+function attOneChar(personagem) {
+    let CurrentLife = document.getElementById('spanCurrentLife'+ personagem.name)
+    CurrentLife.innerText = personagem.currentLife;
+    let CurrentStability = document.getElementById('spanCurrentStability'+ personagem.name)
+    CurrentStability.innerText = personagem.currentStability;
 }
 
 function updateStatus(player) {
-    let personagem = document.getElementById('personagem');
-    console.log(player)
     let name = document.getElementById('nickSpan'+ player).attributes.name.value;
     let totalLife = document.getElementById('spanTotalLife'+ player).attributes.name.value;
     let currentLife = document.getElementById('currentLife'+ player).value;
@@ -143,15 +114,7 @@ function updateStatus(player) {
     if(!currentLife) currentLife = document.getElementById('spanCurrentLife').attributes.name.value;
     if(!currentStability) currentStability = document.getElementById('spanCurrentStability').attributes.name.value;
 
-
-    console.log({
-        name,
-        currentLife,
-        totalLife,
-        currentStability,
-        totalStability
-    })
-    update({
+    socket.emit('update character', {
         name,
         currentLife,
         totalLife,
@@ -159,31 +122,6 @@ function updateStatus(player) {
         totalStability
     })
 
-}
-
-function show(){
-    axios({
-        method: 'post',
-        url: 'http://localhost:8081/data',
-    })
-    .then(function (response){
-        for(let personagem of response.data){
-            if(personagem){
-                putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability, personagem.image)
-            }
-        }
-    })
-    .catch(function(error){
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-        } else if (error.request) {
-            console.log(error.request);
-        } else {
-            console.log('Error', error.message);
-        }
-    })
 }
 
 Dropzone.options.logoDropZone = {
@@ -200,7 +138,15 @@ Dropzone.options.logoDropZone = {
     }
 }
 
+socket.emit('get characters');
+socket.on('characters data', (personagens) => {
+    for(let personagem of personagens){
+        if(personagem){
+            putOnScreen(personagem.name, personagem.currentLife, personagem.currentStability, personagem.totalLife, personagem.totalStability, personagem.image)
+        }
+    }
+})
 
-
-
-show();
+socket.on('update', (personagem) => {
+    attOneChar(personagem)
+})
