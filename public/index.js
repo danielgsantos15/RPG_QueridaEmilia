@@ -7,7 +7,7 @@ function clearCharacter() {
 function putOnScreen(name, life, stability, totalLife, totalStability, image) {
     let personagem = document.getElementById('personagem');
     personagem.innerHTML = personagem.innerHTML + `
-        <section class="card-panel section col s12">
+        <section class="card-panel section col s5">
         <div class="row" id="player${name}">
             <div class="col s4">
                 <label class="white-text" id="nick">Player:</label>
@@ -38,10 +38,29 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
     
 }
 
+function modal() {
+    let modal = document.querySelector('#sessao');
+    let btnModal = document.querySelector('#btnModal');
+
+    modal.style.display = 'block';
+    btnModal.style.display = 'none';
+
+}
+
+function fechar() {
+    let fechaModal = document.querySelector('#sessao');
+    let btnModal = document.querySelector('#btnModal');
+
+    fechaModal.style.display = 'none';
+    btnModal.style.display = 'block';
+
+}
+
 function criarPersonagem(){
     let name = document.getElementById('nickname').value;
     let life = document.getElementById('life').value;
     let stability = document.getElementById('stability').value;
+    let image = document.getElementById('logoDropZone').value;
     
         if (!name || !life || !stability) {
             alert('missing fields:name or life or stability');

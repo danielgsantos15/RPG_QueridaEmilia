@@ -28,3 +28,21 @@ h1{
     width: 150px;
     margin-top: 15px;
 }
+
+#sessao{
+    display: none;
+}
+
+#btnModal{
+    text-align: center;
+    display: block;
+}
+
+#fechaModal{
+    float: right;
+    border-radius: 75%;
+}
+
+footer{
+    position: absolute;
+}

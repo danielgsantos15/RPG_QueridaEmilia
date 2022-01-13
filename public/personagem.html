@@ -30,7 +30,7 @@
             fullLife.innerHTML = personagem.totalLife;
             fullSanity.innerHTML = personagem.totalStability;
             currentSanity.innerHTML = personagem.currentStability;
-            imagem.src = 'http://localhost:3000/uploads/' +personagem.image
+            imagem.src = 'http://localhost:3000/uploads/' + personagem.image
         }
 
         socket.on('data', (personagem) => {
@@ -86,7 +86,7 @@
 
 <body>
     <div id=box class="row">
-        <div class="col s2"id=photo>
+        <div class="col s2" id=photo>
             <img class="circle" width="100" id="imagem" src="" alt="Jogador">
         </div>
         <div class="col s10">
