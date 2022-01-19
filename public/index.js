@@ -7,7 +7,7 @@ function clearCharacter() {
 function putOnScreen(name, life, stability, totalLife, totalStability, image) {
     let personagem = document.getElementById('personagem');
     personagem.innerHTML = personagem.innerHTML + `
-        <section class="card-panel section col s5">
+        <section class="card-panel section col s6" style="border: 3px;">
         <div class="row" id="player${name}">
             <div class="col s4">
                 <label class="white-text" id="nick">Player:</label>
@@ -18,13 +18,13 @@ function putOnScreen(name, life, stability, totalLife, totalStability, image) {
             </div>
             <div class="col s4">
                 <label class="white-text" id="saude">Vida:</label>
-                <span id="spanCurrentLife${name}" name="${life}">${life}</span>/<span id="spanTotalLife${name}" name="${totalLife}">${totalLife}</span>
-                <input name="dano" id="currentLife${name}"/>
+                <span id="spanCurrentLife${name}" name="${life}">${life}</span><span>/</span><span id="spanTotalLife${name}" name="${totalLife}">${totalLife}</span>
+                <input class="white-text" name="dano" id="currentLife${name}"/>
             </div>
             <div class="col s4">
                 <label class="white-text" id="sanidade">Sanidade:</label>
-                <span id="spanCurrentStability${name}" name="${stability}">${stability}</span>/<span id="spanTotalStability${name}" name="${totalStability}">${totalStability}</span>
-                <input name="dano" id="currentStability${name}">
+                <span id="spanCurrentStability${name}" name="${stability}">${stability}</span><span>/</span><span id="spanTotalStability${name}" name="${totalStability}">${totalStability}</span>
+                <input class="white-text" name="dano" id="currentStability${name}">
                 <button id="currentStabilityButton" class="btn-small waves-effect waves-light red darken-4 right" type="button" onclick="updateStatus('${name}')" >Alterar saúde</button>
             </div>
         </div>
